@@ -33,6 +33,7 @@
           @closeclick="infoWindow.open = false">
           <div id="thediv">
             <p>{{infoWindow.title}}</p>
+            <button @click="directionService(infoWindow.position)">GO</button>
           </div>
         </gmap-info-window>
       </gmap-map>
@@ -71,6 +72,28 @@ export default {
     // receives a place object via the autocomplete component
     setPlace(place) {
       this.currentPlace = place;
+    },
+    directionService(position){
+      var directionsDisplay = new google.maps.DirectionsRenderer({map : this.place});
+      var directionService = new google.maps.DirectionsService();
+
+      var currentPos = this.center
+      var currentPlace = new google.maps.LatLng(-8.7988969,115.1725814)
+      var direction = new google.maps.LatLng(parseFloat(position.lat), parseFloat(position.lng))
+      
+      var request = {
+        origin: currentPlace,
+        destination: direction,
+        travelMode: 'DRIVING'
+      };
+
+      directionService.route(request, function(result, status){
+        if(status == "OK"){
+          directionsDisplay.setDirections(result)
+        }
+        // console.log(result, status)
+      })
+      // console.log(parseFloat(currentPos.lat))
     },
     openInfoWindowTemplate (item) {
       this.infoWindow.position = item.position
@@ -132,6 +155,12 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
+        const marker = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        this.markers.push({ position: marker });
+        this.center = marker;
       });
     }
   }
