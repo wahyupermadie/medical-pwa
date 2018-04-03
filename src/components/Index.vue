@@ -14,7 +14,7 @@
       <gmap-map
         id="map"
         :center="center"
-        :zoom="12"
+        :zoom="14"
         style="width:100%;  height: 400px;"
       >
         <gmap-marker
@@ -49,7 +49,7 @@ export default {
     return {
       center: { 
         lat: 45.508, 
-        lng: -73.587 
+        lng: -73.587,
       },
       infoWindow: {
         position: {lat: 50, lng: 90},
@@ -74,25 +74,33 @@ export default {
       this.currentPlace = place;
     },
     directionService(position){
-      var directionsDisplay = new google.maps.DirectionsRenderer({map : this.place});
-      var directionService = new google.maps.DirectionsService();
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 14,
+        center: this.center
+      });
+      directionsDisplay = new google.maps.DirectionsRenderer({
+        map: map
+      });
+
+      var directionsDisplay = new google.maps.DirectionsRenderer({map : map});
+      var directionsService = new google.maps.DirectionsService();
 
       var currentPos = this.center
-      var currentPlace = new google.maps.LatLng(-8.7988969,115.1725814)
-      var direction = new google.maps.LatLng(parseFloat(position.lat), parseFloat(position.lng))
+      var currentPlace = new google.maps.LatLng(parseFloat(currentPos.lat), parseFloat(currentPos.lng))
+      var directionPlace = new google.maps.LatLng(parseFloat(position.lat), parseFloat(position.lng))
       
+      var start = "cambridge, ma";
+      var end = "boston, ma";
       var request = {
         origin: currentPlace,
-        destination: direction,
-        travelMode: 'DRIVING'
+        destination: directionPlace,
+        travelMode: google.maps.TravelMode.DRIVING
       };
-
-      directionService.route(request, function(result, status){
-        if(status == "OK"){
-          directionsDisplay.setDirections(result)
+      directionsService.route(request, function(result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(result);
         }
-        // console.log(result, status)
-      })
+      });
       // console.log(parseFloat(currentPos.lat))
     },
     openInfoWindowTemplate (item) {
@@ -115,7 +123,7 @@ export default {
                   position: { lat: parseFloat( response.data[i].latitude ), lng: parseFloat( response.data[i].longitude ) },
                   key:response.data[i].id,
                   icon : markerIcon,
-                  map: this.place,
+                  map: this.places,
                   label: {
                     text: markerLabel,
                     color: '#000',
