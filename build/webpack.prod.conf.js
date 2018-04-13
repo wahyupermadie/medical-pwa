@@ -109,9 +109,16 @@ const webpackConfig = merge(baseWebpackConfig, {
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
       stripPrefix: 'dist/',
-      runtimeCaching: [{
+      runtimeCaching: [
+      {
         urlPattern : /^https:\/\/fonts\.googleapis\.com\//,
-        handler: 'cacheFirst'
+        handler: 'cacheFirst',
+      },{
+        urlPattern: /^http:\/\/127\.0\.0\.1:8000\//,
+        handler: 'cacheFirst',
+      },{
+        urlPattern: /^https:\/\/maps\.googleapis\.com\//,
+        handler: 'cacheFirst',
       }]
     })
   ]
