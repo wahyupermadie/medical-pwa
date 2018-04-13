@@ -16,17 +16,18 @@ export const store = new Vuex.Store({
         }
     },
     actions:{
-        getPlace({commit},id){
+        getPlaces({commit},{id}){
             commit('setLoading', {status: true})
             axios.get('http://127.0.0.1:8000/api/medical_center/'+id).
                 then(response => {
                     commit('setLoadPlace', response.data)
-                    console.log(response.data)
+                    commit('setLoading', {status: false})
+                    // console.log(response.data)
             })
         }
     },
     getters:{
-        getPlace (state) {
+        getPlace(state) {
             return state.loadPlaces
         },
     }

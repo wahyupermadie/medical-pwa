@@ -51,12 +51,12 @@
           </div>
           <br/>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" style="padding-right:0px !important">
         <div class="col-md-12">
           <div class="panel panel-default">
             <div class="panel-heading">Nama Pelayanan Kesehatan</div>
             <div class="panel-body">
-              {{place.nama}}
+              {{places.nama}}
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">No Telepon 1</div>
             <div class="panel-body">
-              {{place.telepon_1}}
+              {{places.telepon_1}}
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">No Telepon 2</div>
             <div class="panel-body">
-              {{place.telepon_2}}
+              {{places.telepon_2}}
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Alamat</div>
             <div class="panel-body">
-              {{place.alamat}}
+              {{places.alamat}}
             </div>
           </div>
         </div>
@@ -88,29 +88,29 @@
       <div class="col-md-12">
         <gmap-map
           id="map"
-          :center="position"
+          :center="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
           :zoom="14"
           style="width:100%;  height: 400px;"
         >
         <gmap-marker
-          :position="position"
+          :position="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
           :icon="icon"
           :clickable="true"
-          @click="openInfoWindowTemplate(place)"
+          @click="openInfoWindowTemplate(places)"
         ></gmap-marker>
           <gmap-info-window
           :options="{maxWidth: 300}"
-          :position="position"
+          :position="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
           :opened="infoWindow.open"
           @closeclick="infoWindow.open = false">
           <div id="iw-container">
-            <div class="iw-title">{{place.nama}}</div>
+            <div class="iw-title">{{places.nama}}</div>
             <div class="iw-content">
               <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="100%">
               <div class="iw-subTitle">Contacts</div>
-              <p><span class="glyphicon glyphicon-home"> {{place.alamat}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{place.telepon_1}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{place.telepon_2}}</span>
+              <p><span class="glyphicon glyphicon-home"> {{places.alamat}}</span>
+              <br><span class="glyphicon glyphicon-phone"> {{places.telepon_1}}</span>
+              <br><span class="glyphicon glyphicon-phone"> {{places.telepon_2}}</span>
               <br>www: www.myvistaalegre.com
               </p>
             </div>
@@ -141,36 +141,31 @@
           },
           clicked: false,
           place:{},
-          url:'http://127.0.0.1:8000/api/medical_center/'+this.$route.params.id,
           position:{},
           icon:{
             url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
           },
         }
       },
-      mounted(){
-        this.getPlace()
+      computed: {
+        places(){
+            console.log(this.$store.getters.getPlace)
+            return this.$store.getters.getPlace
+        },
+      },
+      created(){
+        this.$store.dispatch('getPlaces', {id: this.id})
       },
       methods: {
-        openInfoWindowTemplate (place) {
-          console.log(place)
+        openInfoWindowTemplate (places) {
+          // console.log(places)
           this.infoWindow.position = {
-              lat: parseFloat(place.latitude),
-              lng: parseFloat(place.longitude)
+              lat: parseFloat(places.latitude),
+              lng: parseFloat(places.longitude)
           };
           this.infoWindow.open = true
           this.clicked = true
         },
-        getPlace(){
-          axios.get(this.url).then(response => {
-            this.place = response.data
-            this.position = {
-              lat: parseFloat(response.data.latitude),
-              lng: parseFloat(response.data.longitude)
-            };
-            console.log(response.data)
-          })
-        }
       }
   }
 </script>

@@ -15,6 +15,7 @@ export default new Router({
     },
     {
       path:'/medical/:id',
+      props: true,
       name: 'MedicalPlace',
       component: MedicalPlace
     }
