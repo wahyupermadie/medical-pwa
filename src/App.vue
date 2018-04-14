@@ -2,7 +2,7 @@
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row" style="padding-left:15px !important">
-        <span class="mdl-layout-title">Public Medical Service</span>
+        <span @click="backToMain()" class="mdl-layout-title">Public Medical Service</span>
       </div>
     </header>
     <!-- <div class="mdl-layout__drawer">
@@ -37,6 +37,9 @@ export default {
       var app = this;
   },
   methods: {
+    backToMain(){
+      this.$router.push('/')
+    },
     hideMenu: function () {
       document.getElementsByClassName('mdl-layout__drawer')[0].classList.remove('is-visible')
       document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible')

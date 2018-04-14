@@ -4,62 +4,92 @@
       <div class="panel panel-default">
         <div class="panel-heading">PUBLIC HEALTH SERVICE</div>
           <div class="panel-body">
-            <div class="form-group form-float" style="margin-bottom: 25px !important">
-              <div class="col-md-5" style="padding-left: 0px !important">
-                <div class="form-group">
-                  <gmap-autocomplete
-                    class="form-control"
-                    @place_changed="setPlace">
-                  </gmap-autocomplete>
+            <div class="col-md-12" style="padding-left: 0px !important; padding-right: 0px !important">
+              <div class="col-md-6">
+                <div class="form-group form-float">
+                    <vue-instant
+                      :suggestion-attribute="suggestionAttribute" 
+                      v-model="searchValue" 
+                      :disabled="false"  
+                      @input="changed" 
+                      :suggestOnAllWords="true"
+                      @click-input="clickInput" 
+                      @click-button="clickButton" 
+                      @selected="selected"  
+                      @enter="enter" 
+                      @key-up="keyUp" 
+                      @key-down="keyDown" 
+                      @key-right="keyRight"
+                      @clear="clear"  
+                      @escape="escape" 
+                      :show-autocomplete="true" 
+                      :autofocus="false" 
+                      :suggestions="suggestions" 
+                      name="medical-search" 
+                      placeholder="Cari Layanan Kesehatan" 
+                      type="google">
+                    </vue-instant>  
+                    <!-- <pre>{{suggestions}}</pre> -->
+                    <!-- <div class="form-group">
+                      <gmap-autocomplete
+                        class="form-control"
+                        @place_changed="setPlace">
+                      </gmap-autocomplete>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <button
+                        style="padding:0px !important; margin:0px !important"
+                        class="btn btn-primary"
+                        @click="addMarker">
+                        FIND
+                      </button> -->
                 </div>
               </div>
-              <div class="form-group">
-                  <button
-                    style="padding:0px !important; margin:0px !important"
-                    class="btn btn-primary"
-                    @click="addMarker">
-                    FIND
-                  </button>
+              <div class="col-md-6">
+              
               </div>
             </div>
             <!-- table -->
-            <gmap-map
-              id="map"
-              :center="center"
-              :zoom="14"
-              style="width:100%;  height: 400px;"
-            >
-              <gmap-marker
-                :key="index"
-                v-for="(item, index) in markers"
-                :position="item.position"
-                :icon="item.icon"
-                :clickable="true"
-                @click="openInfoWindowTemplate(item)"
-              ></gmap-marker>
+            <div class="col-md-12">
+              <gmap-map
+                id="map"
+                :center="center"
+                :zoom="14"
+                style="width:100%;  height: 400px;"
+              >
+                <gmap-marker
+                  :key="index"
+                  v-for="(item, index) in markers"
+                  :position="item.position"
+                  :icon="item.icon"
+                  :clickable="true"
+                  @click="openInfoWindowTemplate(item)"
+                ></gmap-marker>
 
-              <gmap-info-window
-                :options="{maxWidth: 300}"
-                :position="infoWindow.position"
-                :opened="infoWindow.open"
-                @closeclick="infoWindow.open = false">
-                <div id="iw-container">
-                  <div class="iw-title">{{infoWindow.title}}</div>
-                  <div class="iw-content">
-                    <div class="iw-subTitle">History</div>
-                    <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="83">
-                    <p>Founded in 1824, the Porcelain Factory of Vista Alegre was the first industrial unit dedicated to porcelain production in Portugal. For the foundation and success of this risky industrial development was crucial the spirit of persistence of its founder, José Ferreira Pinto Basto. Leading figure in Portuguese society of the nineteenth century farm owner, daring dealer, wisely incorporated the liberal ideas of the century, having become "the first example of free enterprise" in Portugal.</p>
-                    <div class="iw-subTitle">Contacts</div>
-                    <p>VISTA ALEGRE ATLANTIS, SA<br>3830-292 Ílhavo - Portugal<br>
-                      <br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>
+                <gmap-info-window
+                  :options="{maxWidth: 300}"
+                  :position="infoWindow.position"
+                  :opened="infoWindow.open"
+                  @closeclick="infoWindow.open = false">
+                  <div id="iw-container">
+                    <div class="iw-title">{{infoWindow.title}}</div>
+                    <div class="iw-content">
+                      <div class="iw-subTitle">History</div>
+                      <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="83">
+                      <p>Founded in 1824, the Porcelain Factory of Vista Alegre was the first industrial unit dedicated to porcelain production in Portugal. For the foundation and success of this risky industrial development was crucial the spirit of persistence of its founder, José Ferreira Pinto Basto. Leading figure in Portuguese society of the nineteenth century farm owner, daring dealer, wisely incorporated the liberal ideas of the century, having become "the first example of free enterprise" in Portugal.</p>
+                      <div class="iw-subTitle">Contacts</div>
+                      <p>VISTA ALEGRE ATLANTIS, SA<br>3830-292 Ílhavo - Portugal<br>
+                        <br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>
+                    </div>
+                    <a target="_blank" v-bind:href="infoWindow.url">
+                      <img src="../assets/direction-icon.png" alt="go">
+                    </a>
+                    <button class="btn-xs btn-primary" @click="onLoadMedical(infoWindow.key)">Show Detail</button>
                   </div>
-                  <a target="_blank" v-bind:href="infoWindow.url">
-                    <img src="../assets/direction-icon.png" alt="go">
-                  </a>
-                  <button class="btn btn-primary" @click="onLoadMedical(infoWindow.key)"></button> Show Detail
-                </div>
-              </gmap-info-window>
-            </gmap-map>
+                </gmap-info-window>
+              </gmap-map>
+            </div>
         </div>
       </div>
     </div>
@@ -72,6 +102,10 @@ export default {
   name: "GoogleMap",
   data() {
     return {
+      searchValue: '',
+      suggestionAttribute:'nama',
+      suggestions: [],
+      selectedEvent: "",
       center: {
         lat: 45.508,
         lng: -73.587,
@@ -138,7 +172,7 @@ export default {
   },
   mounted() {
     this.geolocate();
-    this.setMarkers();
+    this.setMedicals();
   },
 
   methods: {
@@ -178,7 +212,7 @@ export default {
       // console.log(parseFloat(currentPos.lat))
     },
     openInfoWindowTemplate (item) {
-      console.log(item)
+      // console.log(item)
       this.infoWindow.position = item.position
       this.infoWindow.key = item.key
       this.infoWindow.url = item.link
@@ -186,14 +220,14 @@ export default {
       this.infoWindow.open = true
       this.clicked = true
     },
-    setMarkers() {
+    setMedicals() {
         this.markers = []
         axios.get('http://127.0.0.1:8000/api/medical_center')
         .then(response => {
             for(let i = 0; i<response.data.length;i++){
               let markerIcon = {
                 url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
-                labelOrigin: new google.maps.Point(81, 10),
+                // labelOrigin: new google.maps.Point(81, 10),
               };
               let markerLabel = response.data[i].nama;
               let marker = ({
@@ -209,12 +243,12 @@ export default {
                     fontWeight: 'bold'
                   }
               });
-              console.log(marker)
+              // console.log(marker)
               this.markers.push(marker);
             }
         })
         .catch(function (response){
-            console.log(response);
+            // console.log(response);
             alert("Could not load halaman");
         });
     },
@@ -224,7 +258,7 @@ export default {
           url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
           labelOrigin: new google.maps.Point(81, 10),
         };
-        console.log(this.currentPlace.geometry.location)
+        // console.log(this.currentPlace.geometry.location)
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
@@ -249,6 +283,44 @@ export default {
         this.markers.push({ position: marker });
         this.center = marker;
       });
+    },
+    clickInput: function() {
+        this.selectedEvent = 'click input'
+    },
+    clickButton: function() {
+        this.selectedEvent = 'click button'
+    },
+    selected: function() {
+        this.selectedEvent = 'selection changed'
+    },
+    enter: function() {
+        this.selectedEvent = this.value
+    },
+    keyUp: function() {
+        this.selectedEvent = 'keyup pressed'
+    },
+    keyDown: function() {
+        this.selectedEvent = 'keyDown pressed'
+    },
+    keyRight: function() {
+        this.selectedEvent = 'keyRight pressed'
+    },
+    clear: function() {
+        this.selectedEvent = 'clear input'
+    },
+    escape: function() {
+        this.selectedEvent = 'escape'
+    },
+    changed: function() {
+        var vm = this
+        this.suggestions = []
+        axios.get('http://127.0.0.1:8000/api/search/medical?q='+this.searchValue)
+            .then(function(response) {
+              console.log(response.data.data)
+                response.data.data.forEach(function(a) {
+                    vm.suggestions.push(a)
+                })
+            })
     }
   }
 };

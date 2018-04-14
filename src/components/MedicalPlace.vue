@@ -56,7 +56,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Nama Pelayanan Kesehatan</div>
             <div class="panel-body">
-              {{places.nama}}
+              {{publicMedical.nama}}
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">No Telepon 1</div>
             <div class="panel-body">
-              {{places.telepon_1}}
+              {{publicMedical.telepon_1}}
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">No Telepon 2</div>
             <div class="panel-body">
-              {{places.telepon_2}}
+              {{publicMedical.telepon_2}}
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Alamat</div>
             <div class="panel-body">
-              {{places.alamat}}
+              {{publicMedical.alamat}}
             </div>
           </div>
         </div>
@@ -88,33 +88,33 @@
       <div class="col-md-12">
         <gmap-map
           id="map"
-          :center="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
+          :center="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
           :zoom="14"
           style="width:100%;  height: 400px;"
         >
         <gmap-marker
-          :position="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
+          :position="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
           :icon="icon"
           :clickable="true"
-          @click="openInfoWindowTemplate(places)"
+          @click="openInfoWindowTemplate(publicMedical)"
         ></gmap-marker>
           <gmap-info-window
           :options="{maxWidth: 300}"
-          :position="{lat: parseFloat(places.latitude), lng: parseFloat(places.longitude)}"
+          :position="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
           :opened="infoWindow.open"
           @closeclick="infoWindow.open = false">
           <div id="iw-container">
-            <div class="iw-title">{{places.nama}}</div>
+            <div class="iw-title">{{publicMedical.nama}}</div>
             <div class="iw-content">
               <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="100%">
               <div class="iw-subTitle">Contacts</div>
-              <p><span class="glyphicon glyphicon-home"> {{places.alamat}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{places.telepon_1}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{places.telepon_2}}</span>
+              <p><span class="glyphicon glyphicon-home"> {{publicMedical.alamat}}</span>
+              <br><span class="glyphicon glyphicon-phone"> {{publicMedical.telepon_1}}</span>
+              <br><span class="glyphicon glyphicon-phone"> {{publicMedical.telepon_2}}</span>
               <br>www: www.myvistaalegre.com
               </p>
             </div>
-            <a target="_blank" v-bind:href="infoWindow">
+            <a target="_blank" v-bind:href="'http://maps.google.com/maps?q='+parseFloat(publicMedical.latitude )+','+parseFloat(publicMedical.longitude )">
               <img src="../assets/direction-icon.png" alt="go">
             </a>
             <!-- <router-link :to="{ name: 'MedicalPlace', params:{key_medical: infoWindow}}">Show Detail</router-link> -->
@@ -148,20 +148,20 @@
         }
       },
       computed: {
-        places(){
-            console.log(this.$store.getters.getPlace)
-            return this.$store.getters.getPlace
+        publicMedical(){
+            console.log(this.$store.getters.getMedical)
+            return this.$store.getters.getMedical
         },
       },
       created(){
-        this.$store.dispatch('getPlaces', {id: this.id})
+        this.$store.dispatch('loadedMedical', {id: this.id})
       },
       methods: {
-        openInfoWindowTemplate (places) {
-          // console.log(places)
+        openInfoWindowTemplate (publicMedical) {
+          // console.log(publicMedical)
           this.infoWindow.position = {
-              lat: parseFloat(places.latitude),
-              lng: parseFloat(places.longitude)
+              lat: parseFloat(publicMedical.latitude),
+              lng: parseFloat(publicMedical.longitude)
           };
           this.infoWindow.open = true
           this.clicked = true

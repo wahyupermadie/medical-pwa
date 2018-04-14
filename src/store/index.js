@@ -4,31 +4,31 @@ import axios from 'axios'
 Vue.use(Vuex)
 export const store = new Vuex.Store({
     state:{
-        loadPlaces: {},
+        loadMedical: {},
         loading: false
     },
     mutations:{
-        setLoadPlace(state, payload){
-            state.loadPlaces = payload
+        setLoadMedical(state, payload){
+            state.loadMedical = payload
         },
         setLoading(state, payload){
             state.loading = payload.status
         }
     },
     actions:{
-        getPlaces({commit},{id}){
+        loadedMedical({commit},{id}){
             commit('setLoading', {status: true})
             axios.get('http://127.0.0.1:8000/api/medical_center/'+id).
                 then(response => {
-                    commit('setLoadPlace', response.data)
+                    commit('setLoadMedical', response.data)
                     commit('setLoading', {status: false})
                     // console.log(response.data)
             })
         }
     },
     getters:{
-        getPlace(state) {
-            return state.loadPlaces
+        getMedical(state) {
+            return state.loadMedical
         },
     }
   })

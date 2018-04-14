@@ -4,11 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import { store } from './store'
-import * as VueGoogleMaps from "vue2-google-maps";
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import * as VueGoogleMaps from "vue2-google-maps"
+import 'vue-instant/dist/vue-instant.css'
+import VueInstant from 'vue-instant/dist/vue-instant.common'
+Vue.use(VueInstant)
 
-Vue.use(Vuetify)
 Vue.config.productionTip = false
 Vue.use(VueGoogleMaps, {
   load: {
