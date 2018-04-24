@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="padding-top: 15px; padding-bottom: 15px">
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading">PUBLIC HEALTH SERVICE</div>
@@ -7,23 +7,16 @@
             <div class="col-md-12" style="padding-left: 0px !important; padding-right: 0px !important">
               <div class="col-md-6">
                 <div class="form-group form-float">
+                  <!-- {{selectedEvent}} -->
                     <vue-instant
                       :suggestion-attribute="suggestionAttribute" 
                       v-model="searchValue" 
                       :disabled="false"  
                       @input="changed" 
-                      :suggestOnAllWords="true"
-                      @click-input="clickInput" 
-                      @click-button="clickButton" 
-                      @selected="selected"  
-                      @enter="enter" 
-                      @key-up="keyUp" 
-                      @key-down="keyDown" 
-                      @key-right="keyRight"
-                      @clear="clear"  
-                      @escape="escape" 
+                      :suggestOnAllWords="true" 
+                      @enter="setMedicals(searchValue)" 
                       :show-autocomplete="true" 
-                      :autofocus="false" 
+                      :autofocus="true" 
                       :suggestions="suggestions" 
                       name="medical-search" 
                       placeholder="Cari Layanan Kesehatan" 
@@ -72,20 +65,22 @@
                   :position="infoWindow.position"
                   :opened="infoWindow.open"
                   @closeclick="infoWindow.open = false">
-                  <div id="iw-container">
-                    <div class="iw-title">{{infoWindow.title}}</div>
-                    <div class="iw-content">
-                      <div class="iw-subTitle">History</div>
-                      <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="83">
-                      <p>Founded in 1824, the Porcelain Factory of Vista Alegre was the first industrial unit dedicated to porcelain production in Portugal. For the foundation and success of this risky industrial development was crucial the spirit of persistence of its founder, José Ferreira Pinto Basto. Leading figure in Portuguese society of the nineteenth century farm owner, daring dealer, wisely incorporated the liberal ideas of the century, having become "the first example of free enterprise" in Portugal.</p>
-                      <div class="iw-subTitle">Contacts</div>
-                      <p>VISTA ALEGRE ATLANTIS, SA<br>3830-292 Ílhavo - Portugal<br>
-                        <br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>
+                  <div class="info-box-wrap">
+                    <progressive-img
+                      class="img-medical"
+                      :src="infoWindow.image"
+                      placeholder="https://unsplash.it/1920/1080?image=10"                       
+                    />
+                    <div class="info-box-text-wrap">
+                      <h6 @click="onLoadMedical(infoWindow.key)" class="title">{{infoWindow.title}}</h6>
+                      <p class="info">{{infoWindow.alamatJalan}}</p>
+                      <p class="info">{{infoWindow.telepon_1}}</p>
                     </div>
-                    <a target="_blank" v-bind:href="infoWindow.url">
-                      <img src="../assets/direction-icon.png" alt="go">
-                    </a>
-                    <button class="btn-xs btn-primary" @click="onLoadMedical(infoWindow.key)">Show Detail</button>
+                    <div class="action-btns">
+                      <a target="_blank" v-bind:href="infoWindow.url">
+                        <img src="../assets/direction-icon.png" alt="go">
+                      </a>
+                    </div> 
                   </div>
                 </gmap-info-window>
               </gmap-map>
@@ -102,6 +97,7 @@ export default {
   name: "GoogleMap",
   data() {
     return {
+      url_image:'http://iotbali.com/medrec-photos',
       searchValue: '',
       suggestionAttribute:'nama',
       suggestions: [],
@@ -116,56 +112,7 @@ export default {
         template: ''
       },
       clicked: false,
-      markers: [
-      {
-        position:{
-          lat:-8.7896593,
-          lng:115.1721568,
-        },
-        key: '123',
-        icon:{
-            url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
-        },
-        label: {
-          text: 'RS PTN UDAYANA',
-          color: '#000',
-          fontSize: '14px',
-          fontWeight: 'bold'
-        },
-        link: "http://maps.google.com/maps?q=-8.7896593,115.1721568"
-      },{
-        position:{
-          lat:-8.6754714,
-          lng:115.2093129,
-        },
-        key: '456',
-        icon:{
-            url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
-        },
-        label: {
-          text: 'RS SANGLAH',
-          color: '#000',
-          fontSize: '14px',
-          fontWeight: 'bold'
-        },
-        link: "http://maps.google.com/maps?q=-8.6754714,115.2093129"
-      },{
-        position:{
-          lat:-8.5786545,
-          lng:115.1807797,
-        },
-        key:'789',
-        icon:{
-            url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
-        },
-        label: {
-          text: 'RS BADUNG',
-          color: '#000',
-          fontSize: '14px',
-          fontWeight: 'bold'
-        },
-        link: "http://maps.google.com/maps?q=-8.5786545,115.1807797"
-      }],
+      markers: [],
       places: [],
       currentPlace: null
     };
@@ -212,36 +159,60 @@ export default {
       // console.log(parseFloat(currentPos.lat))
     },
     openInfoWindowTemplate (item) {
-      // console.log(item)
+      var cl_url = "https://res.cloudinary.com/wahyupermadie/image/fetch/c_scale,fl_force_strip.progressive,w_478/f_webp/http://iotbali.com/medrec-photos/";
       this.infoWindow.position = item.position
       this.infoWindow.key = item.key
+      this.infoWindow.image = cl_url+item.foto.foto1
       this.infoWindow.url = item.link
+      this.infoWindow.alamatJalan = item.alamat.alamatJalan
+      this.infoWindow.alamatWilayah = item.alamat.alamatWilayah
+      this.infoWindow.alamatEmail = item.alamat.alamatEmail
+      this.infoWindow.telepon_1 = item.telepon.telepon1
+      this.infoWindow.telepon_2 = item.telepon.telepon2
+      this.infoWindow.title = item.label.text
       this.infoWindow.title = item.label.text
       this.infoWindow.open = true
       this.clicked = true
+      
     },
     setMedicals() {
         this.markers = []
-        axios.get('http://127.0.0.1:8000/api/medical_center')
+        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue,)
         .then(response => {
+            console.log(response.data)
             for(let i = 0; i<response.data.length;i++){
               let markerIcon = {
-                url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
+                url: 'https://icon-icons.com/icons2/807/PNG/32/placeholder_icon-icons.com_66079.png',
                 // labelOrigin: new google.maps.Point(81, 10),
               };
               let markerLabel = response.data[i].nama;
               let marker = ({
-                  position: { lat: parseFloat( response.data[i].latitude ), lng: parseFloat( response.data[i].longitude ) },
+                  position: { lat: parseFloat( response.data[i].lat), lng: parseFloat( response.data[i].lng ) },
                   key:response.data[i].id,
                   icon : markerIcon,
-                  link : "http://maps.google.com/maps?q="+parseFloat( response.data[i].latitude )+','+parseFloat( response.data[i].longitude ),
+                  link : "http://maps.google.com/maps?q="+parseFloat( response.data[i].lat )+','+parseFloat( response.data[i].lng ),
                   map: this.places,
                   label: {
                     text: markerLabel,
                     color: '#000',
                     fontSize: '14px',
                     fontWeight: 'bold'
-                  }
+                  },
+                  telepon:{
+                    telepon1: response.data[i].telepon_1,
+                    telepon2: response.data[i].telepon_2
+                  },
+                  foto:{
+                    foto1: response.data[i].foto,
+                    foto2: response.data[i].foto2,
+                    foto3: response.data[i].foto3,
+                  },
+                  alamat:{
+                    alamatJalan: response.data[i].alamat,
+                    alamatWilayah: response.data[i].alamat_wilayah,
+                    alamatEmail: response.data[i].email
+                  },
+                  jenisMedical: response.data[i].jenis
               });
               // console.log(marker)
               this.markers.push(marker);
@@ -252,24 +223,24 @@ export default {
             alert("Could not load halaman");
         });
     },
-    addMarker() {
-      if (this.currentPlace) {
-        let markerIcon = {
-          url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
-          labelOrigin: new google.maps.Point(81, 10),
-        };
-        // console.log(this.currentPlace.geometry.location)
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-          icon : markerIcon,
-        };
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
-        this.center = marker;
-        this.currentPlace = null;
-      }
-    },
+    // addMarker() {
+    //   if (this.currentPlace) {
+    //     let markerIcon = {
+    //       url: 'https://icon-icons.com/icons2/794/PNG/48/1-80_icon-icons.com_65644.png',
+    //       labelOrigin: new google.maps.Point(81, 10),
+    //     };
+    //     // console.log(this.currentPlace.geometry.location)
+    //     const marker = {
+    //       lat: this.currentPlace.geometry.location.lat(),
+    //       lng: this.currentPlace.geometry.location.lng(),
+    //       icon : markerIcon,
+    //     };
+    //     this.markers.push({ position: marker });
+    //     this.places.push(this.currentPlace);
+    //     this.center = marker;
+    //     this.currentPlace = null;
+    //   }
+    // },
     geolocate: function() {
       navigator.geolocation.getCurrentPosition(position => {
         this.center = {
@@ -284,40 +255,13 @@ export default {
         this.center = marker;
       });
     },
-    clickInput: function() {
-        this.selectedEvent = 'click input'
-    },
-    clickButton: function() {
-        this.selectedEvent = 'click button'
-    },
-    selected: function() {
-        this.selectedEvent = 'selection changed'
-    },
-    enter: function() {
-        this.selectedEvent = this.value
-    },
-    keyUp: function() {
-        this.selectedEvent = 'keyup pressed'
-    },
-    keyDown: function() {
-        this.selectedEvent = 'keyDown pressed'
-    },
-    keyRight: function() {
-        this.selectedEvent = 'keyRight pressed'
-    },
-    clear: function() {
-        this.selectedEvent = 'clear input'
-    },
-    escape: function() {
-        this.selectedEvent = 'escape'
-    },
     changed: function() {
         var vm = this
         this.suggestions = []
-        axios.get('http://127.0.0.1:8000/api/search/medical?q='+this.searchValue)
+        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue)
             .then(function(response) {
-              console.log(response.data.data)
-                response.data.data.forEach(function(a) {
+              // console.log(response.data)
+                response.data.forEach(function(a) {
                     vm.suggestions.push(a)
                 })
             })
@@ -327,54 +271,62 @@ export default {
 </script>
 
 <style scoped>
-  .medical-image{
-    height: 150px;
-    width: 130px;
-  }
-  .medical{
-    text-align: center;
-  }
-  #iw-container {
-    margin-bottom: 10px;
-  }
-  #iw-container .iw-title {
-    font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 400;
-    padding: 10px;
-    background-color: #48b5e9;
-    color: white;
-    margin: 0;
-    border-radius: 2px 2px 0 0;
-  }
-  #iw-container .iw-content {
-    font-size: 13px;
-    line-height: 18px;
-    font-weight: 400;
-    margin-right: 1px;
-    padding: 15px 5px 20px 15px;
-    max-height: 140px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .iw-content img {
-    float: right;
-    margin: 0 5px 5px 10px;
-  }
-  .iw-subTitle {
-    font-size: 16px;
-    font-weight: 700;
-    padding: 5px 0;
-  }
-  .iw-bottom-gradient {
-    position: absolute;
-    width: 326px;
-    height: 25px;
-    bottom: 10px;
-    right: 18px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-  }
+  .info-box-wrap {
+  background:#fff;
+  overflow: hidden;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
+}
+.info-box-text-wrap {
+  height:inherit !important;
+  width:120px;
+  float:left;
+  overflow: hidden;
+}
+.action-btns {
+  float:left;
+  width:30px;
+  overflow: hidden;
+  position: relative;
+  top:12px;
+  left: 6px;
+}
+.action-btns i {
+  font-size: 18px;
+  color: #78A737;
+  margin-left: 3px;
+}
+.action-btns i:hover {
+  transition: color 0.5s ease;
+  color:#ccc;
+  cursor: pointer;
+}
+.action-btns i.fa-heart-o {
+  font-weight: bold;
+}
+.info-box-text-wrap h6.title {
+  padding:6px 5px 1px 0;
+  margin:0 0 0 0;
+  font-family:"Roboto Slab";
+  color: #0c99c8;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.info-box-text-wrap p {
+  padding:0 0 0 0;
+  margin:0 0 0 0;
+}
+.info-box-text-wrap p.info {
+  color:#B25B00;
+}
+ 
+.info-box-wrap  .img-medical {
+  width:40px !important;
+  height:40px;
+  float:left;
+  margin-right: 10px;
+  padding-top:0;
+  margin-top:0;
+}
 </style>

@@ -18,7 +18,7 @@ export const store = new Vuex.Store({
     actions:{
         loadedMedical({commit},{id}){
             commit('setLoading', {status: true})
-            axios.get('http://127.0.0.1:8000/api/medical_center/'+id).
+            axios.get('https://api.medcan.futnet.id/api/medical_center/'+id).
                 then(response => {
                     commit('setLoadMedical', response.data)
                     commit('setLoading', {status: false})

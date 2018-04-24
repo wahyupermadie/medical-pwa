@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/Index'
-import MedicalPlace from '@/components/MedicalPlace'
+
+const Index = () => import(/* webpackChunkName: "home" */ '@/components/Index.vue')
+const MedicalPlace = () => import(/* webpackChunkName: "detail" */ '@/components/MedicalPlace.vue')
 
 Vue.use(Router)
 

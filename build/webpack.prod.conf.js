@@ -11,6 +11,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+// import Purgecss webpack plugin and glob-all
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+const glob = require('glob-all')
+
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const loadMinified = require('./load-minified')
 
@@ -63,6 +67,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true,
       minify: {
+        minifyJS: true,
+        minifyCSS: true,
         removeComments: true,
         collapseWhitespace: true,
         removeAttributeQuotes: true
@@ -111,10 +117,17 @@ const webpackConfig = merge(baseWebpackConfig, {
       stripPrefix: 'dist/',
       runtimeCaching: [
       {
+        urlPattern: /^https:\/\/res\.cloudinary\.com\//,
+        handler: 'cacheFirst',
+      },
+      {
         urlPattern : /^https:\/\/fonts\.googleapis\.com\//,
         handler: 'cacheFirst',
       },{
-        urlPattern: /^http:\/\/127\.0\.0\.1:8000\//,
+        urlPattern: /^https:\/\/api\.medcan\.futnet\.id\//,
+        handler: 'cacheFirst',
+      },{
+        urlPattern: /^http:\/\/medrec\.iotbali\.com\//,
         handler: 'cacheFirst',
       },{
         urlPattern: /^https:\/\/maps\.googleapis\.com\//,
@@ -137,7 +150,8 @@ if (config.build.productionGzip) {
         ')$'
       ),
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
+      cache: true
     })
   )
 }

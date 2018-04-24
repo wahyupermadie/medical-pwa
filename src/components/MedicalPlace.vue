@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="padding-top: 15px; padding-bottom: 15px">
     <div class="row">
       <div class="col-md-6">
           <div id="myCarousel" class="carousel slide" style="height:inherit !important" data-ride="carousel">
@@ -14,44 +14,32 @@
             <div class="carousel-inner">
 
               <div class="item active">
-                <img src="https://www.w3schools.com/bootstrap/la.jpg" alt="Los Angeles" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>Los Angeles</h3>
-                  <p>LA is always so much fun!</p>
-                </div>
+                <progressive-img
+                  placeholder="https://unsplash.it/1920/1080?image=10"
+                  v-bind:src="'https://res.cloudinary.com/wahyupermadie/image/fetch/c_scale,fl_force_strip.progressive,w_478/f_webp/http://iotbali.com/medrec-photos/'+publicMedical.foto" :alt="publicMedical.nama" 
+                  style="width:100%; maxHeight: 500px" />
               </div>
 
               <div class="item">
-                <img src="https://www.w3schools.com/bootstrap/chicago.jpg" alt="Chicago" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>Chicago</h3>
-                  <p>Thank you, Chicago!</p>
-                </div>
+                <progressive-img 
+                  blur:30
+                  placeholder="https://unsplash.it/1920/1080?image=10"
+                  v-bind:src="'https://res.cloudinary.com/wahyupermadie/image/fetch/c_scale,fl_force_strip.progressive,w_478/f_webp/http://iotbali.com/medrec-photos/'+publicMedical.foto2" :alt="publicMedical.nama" 
+                  style="width:100%; maxHeight: 500px" />
               </div>
             
               <div class="item">
-                <img src="https://www.w3schools.com/bootstrap/ny.jpg" alt="New York" style="width:100%;">
-                <div class="carousel-caption">
-                  <h3>New York</h3>
-                  <p>We love the Big Apple!</p>
-                </div>
+               <progressive-img 
+                  placeholder="https://unsplash.it/1920/1080?image=10"
+                  v-bind:src="'https://res.cloudinary.com/wahyupermadie/image/fetch/c_scale,fl_force_strip.progressive,w_478/f_webp/http://iotbali.com/medrec-photos/'+publicMedical.foto3" :alt="publicMedical.nama" 
+                  style="width:100%; maxHeight: 500px" />
               </div>
           
             </div>
-
-            <!-- Left and right controls -->
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-              <span class="glyphicon glyphicon-chevron-left"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-              <span class="glyphicon glyphicon-chevron-right"></span>
-              <span class="sr-only">Next</span>
-            </a>
           </div>
           <br/>
       </div>
-      <div class="col-md-6" style="padding-right:0px !important">
+      <div class="col-md-6">
         <div class="col-md-12">
           <div class="panel panel-default">
             <div class="panel-heading">Nama Pelayanan Kesehatan</div>
@@ -88,19 +76,19 @@
       <div class="col-md-12">
         <gmap-map
           id="map"
-          :center="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
+          :center="{lat: parseFloat(publicMedical.lat), lng: parseFloat(publicMedical.lng)}"
           :zoom="14"
           style="width:100%;  height: 400px;"
         >
         <gmap-marker
-          :position="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
+          :position="{lat: parseFloat(publicMedical.lat), lng: parseFloat(publicMedical.lng)}"
           :icon="icon"
           :clickable="true"
           @click="openInfoWindowTemplate(publicMedical)"
         ></gmap-marker>
           <gmap-info-window
           :options="{maxWidth: 300}"
-          :position="{lat: parseFloat(publicMedical.latitude), lng: parseFloat(publicMedical.longitude)}"
+          :position="{lat: parseFloat(publicMedical.lat), lng: parseFloat(publicMedical.lng)}"
           :opened="infoWindow.open"
           @closeclick="infoWindow.open = false">
           <div id="iw-container">

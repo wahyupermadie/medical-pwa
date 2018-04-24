@@ -9,6 +9,9 @@ import 'vue-instant/dist/vue-instant.css'
 import VueInstant from 'vue-instant/dist/vue-instant.common'
 Vue.use(VueInstant)
 
+import VueProgressiveImage from 'vue-progressive-image'
+Vue.use(VueProgressiveImage)
+
 Vue.config.productionTip = false
 Vue.use(VueGoogleMaps, {
   load: {

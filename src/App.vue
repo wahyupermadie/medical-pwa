@@ -1,30 +1,22 @@
 <template>
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row" style="padding-left:15px !important">
-        <span @click="backToMain()" class="mdl-layout-title">Public Medical Service</span>
+  <div>
+    <nav style="background-color: rgb(33, 150, 243) !important;" class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header" >
+          <a class="navbar-brand" style="color: #ffff !important;" href="#">GIS of Medical Center</a>
+        </div>
       </div>
-    </header>
-    <!-- <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">MENU</span>
-      <nav class="mdl-navigation">
-        <router-link class="mdl-navigation__link" to="/" @click.native="hideMenu">Home</router-link>
-        <router-link class="mdl-navigation__link" to="/" @click.native="hideMenu">Post a picture</router-link>
-      </nav>
-    </div> -->
-    <main class="mdl-layout__content">
-      <div class="page-content">
+    </nav>
+      <div style="padding-top: 50px;" class="page-content">
         <router-view :key="$route.path"></router-view>
       </div>
-    </main>
-    <footer style="background-color: rgb(33,150,243) !important; padding:15px; color:#ffffff" class="mdl-mini-footer">
-      Copyright © 2018 by Topik Khusus MDI
-    </footer>
+    <footer class="footer">
+    Copyright © 2018 by Prof. Dr. I Ketut Gede Darma Putra, S.Kom., M.T.
+  </footer>
   </div>
 
 </template>
 <script>
-require('material-design-lite')
 export default {
   name: 'app',
   data(){
@@ -40,15 +32,26 @@ export default {
     backToMain(){
       this.$router.push('/')
     },
-    hideMenu: function () {
-      document.getElementsByClassName('mdl-layout__drawer')[0].classList.remove('is-visible')
-      document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible')
-    },
   } 
 }
 </script>
 <style>
-  @import url('https://code.getmdl.io/1.2.1/material.blue-red.min.css');
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-  /* @import '../public/vendor/bootstrap/css/bootstrap.min.css'; */
+.header,
+    .footer {
+      padding: 10px;
+      width: 100%;
+      background-color: rgb(33, 150, 243) !important;
+      color: #ffff;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      left: 0;
+    }
+    .footer {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      justify-content: left;
+      height: 50px;
+      font-size: 1.5rem;
+      bottom: 0;
+    }
 </style>
