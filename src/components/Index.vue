@@ -43,6 +43,12 @@
               
               </div>
             </div>
+            <div class="col-md-12">
+                <label class="kabupaten checkbox-inline" v-for="kabupaten in kabupatens">
+                    <img v-bind:src="kabupaten.logo" :alt="kabupaten.nama" style="width: 20px !important; height: 20px !important; margin-right: 20px">
+                  <input v-on:change="setMedicals()" v-model="checkedMedical" type="checkbox" v-bind:value="kabupaten.nama">{{kabupaten.nama}}
+                </label>
+            </div>
             <!-- table -->
             <div class="col-md-12">
               <gmap-map
@@ -97,6 +103,45 @@ export default {
   name: "GoogleMap",
   data() {
     return {
+      checkedMedical: [],
+      kabupatens: [
+        {
+          nama:'Badung',
+          logo: 'https://api.medcan.futnet.id/logoDaerah/badung.png'
+        },
+        {
+          nama:'Tabanan',
+          logo: 'https://api.medcan.futnet.id/logoDaerah/tabanan.png'
+        },
+        {
+          nama:'Denpasar',
+          logo: 'https://api.medcan.futnet.id/logoDaerah/denpasar.png'
+        },
+        {
+          nama:'Klungkung',
+          logo:'https://api.medcan.futnet.id/logoDaerah/klungkung.png'
+        },
+        {
+          nama:'Karangasem',
+          logo:'https://api.medcan.futnet.id/logoDaerah/karangasem.png'
+        },
+        {
+          nama:'Jembrana',
+          logo:'https://api.medcan.futnet.id/logoDaerah/jembrana.png'
+        },
+        {
+          nama:'Buleleng',
+          logo: 'https://api.medcan.futnet.id/logoDaerah/buleleng.png'
+        },
+        {
+          nama:'Gianyar',
+          logo:'https://api.medcan.futnet.id/logoDaerah/gianyar.png'
+        },
+        {
+          nama:'Bangli',
+          logo:'https://api.medcan.futnet.id/logoDaerah/bangli.png'
+        },
+      ],
       url_image:'http://iotbali.com/medrec-photos',
       searchValue: '',
       suggestionAttribute:'nama',
@@ -121,7 +166,6 @@ export default {
     this.geolocate();
     this.setMedicals();
   },
-
   methods: {
     onLoadMedical (id) {
       this.$router.push('/medical/' + id)
@@ -177,9 +221,11 @@ export default {
     },
     setMedicals() {
         this.markers = []
-        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue,)
+        var url = 'https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical
+        console.log(url)
+        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical)
         .then(response => {
-            console.log(response.data)
+            // console.log(this.checkedMedical)
             for(let i = 0; i<response.data.length;i++){
               let markerIcon = {
                 url: 'https://icon-icons.com/icons2/807/PNG/32/placeholder_icon-icons.com_66079.png',
@@ -271,62 +317,15 @@ export default {
 </script>
 
 <style scoped>
-  .info-box-wrap {
-  background:#fff;
-  overflow: hidden;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
+.kabupaten {
+    padding: 0px !important;
+    margin-left: 10px !important;
 }
-.info-box-text-wrap {
-  height:inherit !important;
-  width:120px;
-  float:left;
-  overflow: hidden;
-}
-.action-btns {
-  float:left;
-  width:30px;
-  overflow: hidden;
-  position: relative;
-  top:12px;
-  left: 6px;
-}
-.action-btns i {
-  font-size: 18px;
-  color: #78A737;
-  margin-left: 3px;
-}
-.action-btns i:hover {
-  transition: color 0.5s ease;
-  color:#ccc;
-  cursor: pointer;
-}
-.action-btns i.fa-heart-o {
-  font-weight: bold;
-}
-.info-box-text-wrap h6.title {
-  padding:6px 5px 1px 0;
-  margin:0 0 0 0;
-  font-family:"Roboto Slab";
-  color: #0c99c8;
-  font-weight: 700;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.info-box-text-wrap p {
-  padding:0 0 0 0;
-  margin:0 0 0 0;
-}
-.info-box-text-wrap p.info {
-  color:#B25B00;
-}
- 
-.info-box-wrap  .img-medical {
-  width:40px !important;
-  height:40px;
-  float:left;
-  margin-right: 10px;
-  padding-top:0;
-  margin-top:0;
+@media only screen and (max-width: 600px) {
+    .kabupaten {
+        padding: 0px !important;
+        margin: 0px !important;
+        width: 50%
+    }
 }
 </style>

@@ -91,21 +91,22 @@
           :position="{lat: parseFloat(publicMedical.lat), lng: parseFloat(publicMedical.lng)}"
           :opened="infoWindow.open"
           @closeclick="infoWindow.open = false">
-          <div id="iw-container">
-            <div class="iw-title">{{publicMedical.nama}}</div>
-            <div class="iw-content">
-              <img src="http://maps.marnoto.com/en/5wayscustomizeinfowindow/images/vistalegre.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="100%">
-              <div class="iw-subTitle">Contacts</div>
-              <p><span class="glyphicon glyphicon-home"> {{publicMedical.alamat}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{publicMedical.telepon_1}}</span>
-              <br><span class="glyphicon glyphicon-phone"> {{publicMedical.telepon_2}}</span>
-              <br>www: www.myvistaalegre.com
-              </p>
+          <div class="info-box-wrap">
+            <progressive-img
+              class="img-medical"
+              v-bind:src="'https://res.cloudinary.com/wahyupermadie/image/fetch/c_scale,fl_force_strip.progressive,w_478/f_webp/http://iotbali.com/medrec-photos/'+publicMedical.foto"
+              placeholder="https://unsplash.it/1920/1080?image=10"                       
+            />
+            <div class="info-box-text-wrap">
+              <h6 class="title">{{publicMedical.nama}}</h6>
+              <p class="info">{{publicMedical.alamat}}</p>
+              <p class="info">{{publicMedical.telepon_1}}</p>
             </div>
-            <a target="_blank" v-bind:href="'http://maps.google.com/maps?q='+parseFloat(publicMedical.latitude )+','+parseFloat(publicMedical.longitude )">
-              <img src="../assets/direction-icon.png" alt="go">
-            </a>
-            <!-- <router-link :to="{ name: 'MedicalPlace', params:{key_medical: infoWindow}}">Show Detail</router-link> -->
+            <div class="action-btns">
+              <a target="_blank" v-bind:href="'http://maps.google.com/maps?q='+parseFloat(publicMedical.latitude )+','+parseFloat(publicMedical.longitude )">
+                <img src="../assets/direction-icon.png" alt="go">
+              </a>
+            </div> 
           </div>
           </gmap-info-window>
         </gmap-map>

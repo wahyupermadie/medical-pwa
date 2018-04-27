@@ -8,9 +8,11 @@ import * as VueGoogleMaps from "vue2-google-maps"
 import 'vue-instant/dist/vue-instant.css'
 import VueInstant from 'vue-instant/dist/vue-instant.common'
 Vue.use(VueInstant)
-
 import VueProgressiveImage from 'vue-progressive-image'
 Vue.use(VueProgressiveImage)
+import 'vuetify/dist/vuetify.min.css' 
+import Vuetify from 'vuetify'
+Vue.use(Vuetify)
 
 Vue.config.productionTip = false
 Vue.use(VueGoogleMaps, {
