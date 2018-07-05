@@ -11,7 +11,7 @@
         <router-view :key="$route.path"></router-view>
       </div>
     <footer class="footer">
-    Copyright © 2018 by Prof. Dr. I Ketut Gede Darma Putra, S.Kom., M.T.
+    Copyright © 2018 by ProfDP
   </footer>
   </div>
 

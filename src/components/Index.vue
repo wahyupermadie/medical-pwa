@@ -44,10 +44,14 @@
               </div>
             </div>
             <div class="col-md-12">
-                <label class="kabupaten checkbox-inline" v-for="kabupaten in kabupatens">
-                    <img v-bind:src="kabupaten.logo" :alt="kabupaten.nama" style="width: 20px !important; height: 20px !important; margin-right: 20px">
-                  <input v-on:change="setMedicals()" v-model="checkedMedical" type="checkbox" v-bind:value="kabupaten.nama">{{kabupaten.nama}}
-                </label>
+              <div class="panel panel-default">
+                <div class="panel-body">
+                    <label class="kabupaten checkbox-inline" v-for="(kabupaten,index) in kabupatens" v-bind:key="index" v-bind:style="{background:kabupaten.color,color:kabupaten.fontColor}">
+                        <img v-bind:src="kabupaten.logo" :alt="kabupaten.nama" style="width: 20px !important; height: 20px !important; margin-right: 20px">
+                      <input v-on:change="setMedicals()" v-model="checkedMedical" type="checkbox" v-bind:value="kabupaten.nama">{{kabupaten.nama}}
+                    </label>
+                </div>
+              </div>
             </div>
             <!-- table -->
             <div class="col-md-12">
@@ -106,40 +110,58 @@ export default {
       checkedMedical: [],
       kabupatens: [
         {
+          color:'blue',
+          fontColor: 'white',
           nama:'Badung',
-          logo: 'https://api.medcan.futnet.id/logoDaerah/badung.png'
+          logo: 'https://api.emr.profdp.com/logoDaerah/badung.png'
         },
         {
+          color:'green',
+          fontColor: 'white',
           nama:'Tabanan',
-          logo: 'https://api.medcan.futnet.id/logoDaerah/tabanan.png'
+          logo: 'https://api.emr.profdp.com/logoDaerah/tabanan.png'
         },
         {
+          color:'cyan',
+          fontColor: 'white',
           nama:'Denpasar',
-          logo: 'https://api.medcan.futnet.id/logoDaerah/denpasar.png'
+          logo: 'https://api.emr.profdp.com/logoDaerah/denpasar.png'
         },
         {
+          color:'blue',
+          fontColor: 'white',
           nama:'Klungkung',
-          logo:'https://api.medcan.futnet.id/logoDaerah/klungkung.png'
+          logo:'https://api.emr.profdp.com/logoDaerah/klungkung.png'
         },
         {
+          color:'red',
+          fontColor: 'white',
           nama:'Karangasem',
-          logo:'https://api.medcan.futnet.id/logoDaerah/karangasem.png'
+          logo:'https://api.emr.profdp.com/logoDaerah/karangasem.png'
         },
         {
+          color:'#9CBA39',
+          fontColor: 'white',
           nama:'Jembrana',
-          logo:'https://api.medcan.futnet.id/logoDaerah/jembrana.png'
+          logo:'https://api.emr.profdp.com/logoDaerah/jembrana.png'
         },
         {
+          color:'cyan',
+          fontColor: 'white',
           nama:'Buleleng',
-          logo: 'https://api.medcan.futnet.id/logoDaerah/buleleng.png'
+          logo: 'https://api.emr.profdp.com/logoDaerah/buleleng.png'
         },
         {
+          color:'#EF9B0F',
+          fontColor: 'white',
           nama:'Gianyar',
-          logo:'https://api.medcan.futnet.id/logoDaerah/gianyar.png'
+          logo:'https://api.emr.profdp.com/logoDaerah/gianyar.png'
         },
         {
+          color:'blue',
+          fontColor: 'white',
           nama:'Bangli',
-          logo:'https://api.medcan.futnet.id/logoDaerah/bangli.png'
+          logo:'https://api.emr.profdp.com/logoDaerah/bangli.png'
         },
       ],
       url_image:'http://iotbali.com/medrec-photos',
@@ -221,9 +243,9 @@ export default {
     },
     setMedicals() {
         this.markers = []
-        var url = 'https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical
+        var url = 'https://api.emr.profdp.com/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical
         console.log(url)
-        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical)
+        axios.get('https://api.emr.profdp.com/api/search/medical?q='+this.searchValue+'&value='+this.checkedMedical)
         .then(response => {
             // console.log(this.checkedMedical)
             for(let i = 0; i<response.data.length;i++){
@@ -304,7 +326,7 @@ export default {
     changed: function() {
         var vm = this
         this.suggestions = []
-        axios.get('https://api.medcan.futnet.id/api/search/medical?q='+this.searchValue)
+        axios.get('https://api.emr.profdp.com/api/search/medical?q='+this.searchValue)
             .then(function(response) {
               // console.log(response.data)
                 response.data.forEach(function(a) {
